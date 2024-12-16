@@ -165,23 +165,23 @@ void *studentThread(void *arg) {
 
     int sum = 0;
     for (int i = 0; i < M; i++) { sum += student->grades[i]; }
-    student->average = sum / (float)M;
-    student->passed = (student->average >= 60);
+    student->average = sum / (float)M; // Calculate average grade
+    student->passed = (student->average >= 60); //  Check for average passing requirement
 
-    sem_wait(&sem_stats);
+    sem_wait(&sem_stats); // Wait while a thread manipulates the global variables
     postProcessStatistics(student->grades, student->average, student->passed);
-    sem_post(&sem_stats);
+    sem_post(&sem_stats); // Signal for other threads to continue
 
     return NULL;
 }
 
 void postProcessStatistics(int *grades, float average, int passed) {
-    if (passed) total_passed++;
+    if (passed) total_passed++; // Check if a student has passed to increase the total passed count
 
     for (int i = 0; i < M; i++) {
-        if (grades[i] >= 60) { passed_per_question[i]++; }
-        if (grades[i] > highest_grade) { highest_grade = grades[i]; }
-        if (grades[i] < lowest_grade) { lowest_grade = grades[i]; }
+        if (grades[i] >= 60) { passed_per_question[i]++; } //  Check for question passing requirement
+        if (grades[i] > highest_grade) { highest_grade = grades[i]; } // Check if the grade is the highest
+        if (grades[i] < lowest_grade) { lowest_grade = grades[i]; } // Check if the is the lowest
     }
 }
 
